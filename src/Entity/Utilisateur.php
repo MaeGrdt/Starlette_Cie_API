@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-#[ApiResource]
+#[ApiResource()]
 class Utilisateur
 {
     #[ORM\Id, ORM\Column(name: 'id_utilisateur'), ORM\GeneratedValue]
@@ -52,10 +52,17 @@ class Utilisateur
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
     private ?Image $id_image = null;
 
+    /**
+     * @var Collection<int, Commande>
+     */
+    #[ORM\OneToMany(targetEntity: Commande::class, mappedBy: 'id_utilisateur')]
+    private Collection $commandes;
+
     public function __construct()
     {
         $this->favoris = new ArrayCollection();
         $this->avis = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     public function getIdUtilisateur(): ?int
@@ -186,6 +193,36 @@ class Utilisateur
     public function setIdImage(?Image $id_image): static
     {
         $this->id_image = $id_image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commande>
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commande $commande): static
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes->add($commande);
+            $commande->setIdUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commande $commande): static
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getIdUtilisateur() === $this) {
+                $commande->setIdUtilisateur(null);
+            }
+        }
 
         return $this;
     }

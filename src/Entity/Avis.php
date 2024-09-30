@@ -8,13 +8,13 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AvisRepository::class)]
-#[ApiResource]
+#[ApiResource()]
 class Avis
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_avis')]
-    private ?int $id = null;
+    private ?int $id_avis = null;
 
     #[ORM\Column]
     private ?int $note = null;
@@ -35,7 +35,7 @@ class Avis
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id_avis;
     }
 
     public function getNote(): ?int

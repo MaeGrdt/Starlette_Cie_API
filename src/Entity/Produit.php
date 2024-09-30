@@ -12,7 +12,7 @@ use App\Enum\CategorieEnum;
 use App\Enum\TypeEnum;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-#[ApiResource]
+#[ApiResource()]
 class Produit
 {
     #[ORM\Id]
@@ -54,11 +54,18 @@ class Produit
     #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_produit')]
     private Collection $produitsVariants;
 
+    /**
+     * @var Collection<int, CommandeDetail>
+     */
+    #[ORM\ManyToMany(targetEntity: CommandeDetail::class, mappedBy: 'produits')]
+    private Collection $commandeDetails;
+
     public function __construct()
     {
         $this->favoris = new ArrayCollection();
         $this->id_utilisateur = new ArrayCollection();
         $this->produitsVariants = new ArrayCollection();
+        $this->commandeDetails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -211,6 +218,33 @@ class Produit
             if ($produitsVariant->getIdProduit() === $this) {
                 $produitsVariant->setIdProduit(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommandeDetail>
+     */
+    public function getCommandeDetails(): Collection
+    {
+        return $this->commandeDetails;
+    }
+
+    public function addCommandeDetail(CommandeDetail $commandeDetail): static
+    {
+        if (!$this->commandeDetails->contains($commandeDetail)) {
+            $this->commandeDetails->add($commandeDetail);
+            $commandeDetail->addIdProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeDetail(CommandeDetail $commandeDetail): static
+    {
+        if ($this->commandeDetails->removeElement($commandeDetail)) {
+            $commandeDetail->removeIdProduit($this);
         }
 
         return $this;

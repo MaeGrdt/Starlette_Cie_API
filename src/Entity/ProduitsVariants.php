@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Enum\AffinageEnum;
 use App\Enum\StockEnum;
 use App\Repository\ProduitsVariantsRepository;
@@ -9,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProduitsVariantsRepository::class)]
+#[ApiResource()]
 class ProduitsVariants
 {
     #[ORM\Id]
