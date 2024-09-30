@@ -235,7 +235,7 @@ class Produit
     {
         if (!$this->commandeDetails->contains($commandeDetail)) {
             $this->commandeDetails->add($commandeDetail);
-            $commandeDetail->addIdProduit($this);
+            $commandeDetail->addProduit($this);
         }
 
         return $this;
@@ -244,7 +244,7 @@ class Produit
     public function removeCommandeDetail(CommandeDetail $commandeDetail): static
     {
         if ($this->commandeDetails->removeElement($commandeDetail)) {
-            $commandeDetail->removeIdProduit($this);
+            $commandeDetail->removeProduit($this);
         }
 
         return $this;
