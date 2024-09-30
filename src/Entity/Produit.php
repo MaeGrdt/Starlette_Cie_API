@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Enum\CategorieEnum;
 use App\Enum\TypeEnum;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ApiResource()]
@@ -18,6 +19,7 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_produit')]
+    #[Groups(['produits.index'])]
     private ?int $id_produit = null;
 
     #[ORM\Column(length: 100)]
