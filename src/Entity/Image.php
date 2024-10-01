@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\TypeImageEnum;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,8 +18,8 @@ class Image
     #[ORM\Column(length: 255)]
     private ?string $url = null;
 
-    #[ORM\Column(length: 50)]
-    private ?TypeImageEnum $type_image = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    private ?string $type_image = null;
 
     public function getId(): ?int
     {
@@ -39,12 +38,12 @@ class Image
         return $this;
     }
 
-    public function getType(): ?TypeImageEnum
+    public function getType(): ?string
     {
         return $this->type_image;
     }
 
-    public function setType(TypeImageEnum $type_image): static
+    public function setType(?string $type_image): static
     {
         $this->type_image = $type_image;
 

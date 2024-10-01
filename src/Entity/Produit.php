@@ -8,57 +8,52 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Enum\CategorieEnum;
-use App\Enum\TypeEnum;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['produits.index']],
+    denormalizationContext: ['groups' => ['produits.detail']]
+)]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_produit')]
-    #[Groups(['produits.index'])]
-    private ?int $id_produit = null;
+    #[Groups(['produits.index', 'produits.detail'])]
+    private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['produits.index', 'produits.detail'])]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 50)]
-    private ?CategorieEnum $categorie = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    #[Groups(['produits.detail'])]
+    private ?string $categorie = null;
 
-    #[ORM\Column(length: 50)]
-    private ?TypeEnum $type_produit = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    #[Groups(['produits.detail'])]
+    private ?string $type_produit = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['produits.detail'])]
     private ?\DateTimeInterface $date_ajout = null;
 
-    /**
-     * @var Collection<int, Favoris>
-     */
     #[ORM\OneToMany(targetEntity: Favoris::class, mappedBy: 'id_produit')]
     private Collection $favoris;
 
-    /**
-     * @var Collection<int, Avis>
-     */
     #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'id_produit')]
     private Collection $id_utilisateur;
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
+    #[Groups(['produits.detail'])]
     private ?Image $id_image = null;
 
-    /**
-     * @var Collection<int, ProduitsVariants>
-     */
     #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_produit')]
+    #[Groups(['produits.detail'])]
     private Collection $produitsVariants;
 
-    /**
-     * @var Collection<int, CommandeDetail>
-     */
     #[ORM\ManyToMany(targetEntity: CommandeDetail::class, mappedBy: 'produits')]
     private Collection $commandeDetails;
 
@@ -72,7 +67,7 @@ class Produit
 
     public function getId(): ?int
     {
-        return $this->id_produit;
+        return $this->id;
     }
 
     public function getNom(): ?string
@@ -80,34 +75,31 @@ class Produit
         return $this->nom;
     }
 
-    public function setNom(string $nom): static
+    public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
         return $this;
     }
 
-    public function getCategorie(): ?CategorieEnum
+    public function getCategorie(): ?string
     {
         return $this->categorie;
     }
 
-    public function setCategorie(CategorieEnum $categorie): static
+    public function setCategorie(?string $categorie): self
     {
         $this->categorie = $categorie;
-
         return $this;
     }
 
-    public function getType(): ?TypeEnum
+    public function getTypeProduit(): ?string
     {
         return $this->type_produit;
     }
 
-    public function setType(TypeEnum $type_produit): static
+    public function setTypeProduit(?string $type_produit): self
     {
         $this->type_produit = $type_produit;
-
         return $this;
     }
 
@@ -116,22 +108,18 @@ class Produit
         return $this->date_ajout;
     }
 
-    public function setDateAjout(\DateTimeInterface $date_ajout): static
+    public function setDateAjout(\DateTimeInterface $date_ajout): self
     {
         $this->date_ajout = $date_ajout;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Favoris>
-     */
     public function getFavoris(): Collection
     {
         return $this->favoris;
     }
 
-    public function addFavori(Favoris $favori): static
+    public function addFavori(Favoris $favori): self
     {
         if (!$this->favoris->contains($favori)) {
             $this->favoris->add($favori);
@@ -141,10 +129,9 @@ class Produit
         return $this;
     }
 
-    public function removeFavori(Favoris $favori): static
+    public function removeFavori(Favoris $favori): self
     {
         if ($this->favoris->removeElement($favori)) {
-            // set the owning side to null (unless already changed)
             if ($favori->getIdProduit() === $this) {
                 $favori->setIdProduit(null);
             }
@@ -153,15 +140,12 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Avis>
-     */
     public function getIdUtilisateur(): Collection
     {
         return $this->id_utilisateur;
     }
 
-    public function addIdUtilisateur(Avis $idUtilisateur): static
+    public function addIdUtilisateur(Avis $idUtilisateur): self
     {
         if (!$this->id_utilisateur->contains($idUtilisateur)) {
             $this->id_utilisateur->add($idUtilisateur);
@@ -171,10 +155,9 @@ class Produit
         return $this;
     }
 
-    public function removeIdUtilisateur(Avis $idUtilisateur): static
+    public function removeIdUtilisateur(Avis $idUtilisateur): self
     {
         if ($this->id_utilisateur->removeElement($idUtilisateur)) {
-            // set the owning side to null (unless already changed)
             if ($idUtilisateur->getIdProduit() === $this) {
                 $idUtilisateur->setIdProduit(null);
             }
@@ -188,22 +171,18 @@ class Produit
         return $this->id_image;
     }
 
-    public function setIdImage(?Image $id_image): static
+    public function setIdImage(?Image $id_image): self
     {
         $this->id_image = $id_image;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, ProduitsVariants>
-     */
     public function getProduitsVariants(): Collection
     {
         return $this->produitsVariants;
     }
 
-    public function addProduitsVariant(ProduitsVariants $produitsVariant): static
+    public function addProduitsVariant(ProduitsVariants $produitsVariant): self
     {
         if (!$this->produitsVariants->contains($produitsVariant)) {
             $this->produitsVariants->add($produitsVariant);
@@ -213,10 +192,9 @@ class Produit
         return $this;
     }
 
-    public function removeProduitsVariant(ProduitsVariants $produitsVariant): static
+    public function removeProduitsVariant(ProduitsVariants $produitsVariant): self
     {
         if ($this->produitsVariants->removeElement($produitsVariant)) {
-            // set the owning side to null (unless already changed)
             if ($produitsVariant->getIdProduit() === $this) {
                 $produitsVariant->setIdProduit(null);
             }
@@ -225,15 +203,12 @@ class Produit
         return $this;
     }
 
-    /**
-     * @return Collection<int, CommandeDetail>
-     */
     public function getCommandeDetails(): Collection
     {
         return $this->commandeDetails;
     }
 
-    public function addCommandeDetail(CommandeDetail $commandeDetail): static
+    public function addCommandeDetail(CommandeDetail $commandeDetail): self
     {
         if (!$this->commandeDetails->contains($commandeDetail)) {
             $this->commandeDetails->add($commandeDetail);
@@ -243,7 +218,7 @@ class Produit
         return $this;
     }
 
-    public function removeCommandeDetail(CommandeDetail $commandeDetail): static
+    public function removeCommandeDetail(CommandeDetail $commandeDetail): self
     {
         if ($this->commandeDetails->removeElement($commandeDetail)) {
             $commandeDetail->removeProduit($this);

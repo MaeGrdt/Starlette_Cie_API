@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\EtatEnum;
 use App\Repository\ArticleActualiteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,8 +28,8 @@ class ArticleActualite
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_creation = null;
 
-    #[ORM\Column(length: 50)]
-    private ?EtatEnum $etat = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    private ?string $etat = null;
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
@@ -89,12 +88,12 @@ class ArticleActualite
         return $this;
     }
 
-    public function getEtat(): ?EtatEnum
+    public function getEtat(): ?string
     {
         return $this->etat;
     }
 
-    public function setEtat(EtatEnum $etat): static
+    public function setEtat(?string $etat): static
     {
         $this->etat = $etat;
 

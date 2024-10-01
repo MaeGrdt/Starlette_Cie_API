@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\AffinageEnum;
-use App\Enum\StockEnum;
 use App\Repository\ProduitsVariantsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,11 +22,11 @@ class ProduitsVariants
     #[ORM\Column]
     private ?int $poids = null;
 
-    #[ORM\Column(length: 50)]
-    private ?AffinageEnum $affinage = null;
+    #[ORM\Column(type: 'string', length: 20)]
+    private ?string $affinage = null;
 
-    #[ORM\Column(length: 50)]
-    private ?StockEnum $stock = null;
+    #[ORM\Column(type: 'string', length: 20)]
+    private ?string $stock = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
@@ -80,24 +78,24 @@ class ProduitsVariants
         return $this;
     }
 
-    public function getAffinage(): ?AffinageEnum
+    public function getAffinage(): ?string
     {
         return $this->affinage;
     }
 
-    public function setAffinage(AffinageEnum $affinage): static
+    public function setAffinage(?string $affinage): static
     {
         $this->affinage = $affinage;
 
         return $this;
     }
 
-    public function getStock(): ?StockEnum
+    public function getStock(): ?string
     {
         return $this->stock;
     }
 
-    public function setStock(StockEnum $stock): static
+    public function setStock(?string $stock): static
     {
         $this->stock = $stock;
 

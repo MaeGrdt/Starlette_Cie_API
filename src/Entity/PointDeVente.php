@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use App\Enum\CadenceEnum;
 use App\Repository\PointDeVenteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,8 +36,8 @@ class PointDeVente
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $horaire_fin = null;
 
-    #[ORM\Column(length: 50)]
-    private ?CadenceEnum $cadence = null;
+    #[ORM\Column(type: 'string', length: 50)]
+    private ?string $cadence = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $iframe_google_map = null;
@@ -131,12 +130,12 @@ class PointDeVente
         return $this;
     }
 
-    public function getCadence(): ?CadenceEnum
+    public function getCadence(): ?string
     {
         return $this->cadence;
     }
 
-    public function setCadence(CadenceEnum $cadence): static
+    public function setCadence(?string $cadence): static
     {
         $this->cadence = $cadence;
 
@@ -176,7 +175,6 @@ class PointDeVente
     public function removeCommande(Commande $commande): static
     {
         if ($this->commandes->removeElement($commande)) {
-            // set the owning side to null (unless already changed)
             if ($commande->getIdPointDeVente() === $this) {
                 $commande->setIdPointDeVente(null);
             }
