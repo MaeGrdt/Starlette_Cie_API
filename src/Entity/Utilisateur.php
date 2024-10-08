@@ -7,33 +7,44 @@ use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UtilisateurRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['utilisateurs.index']],
+    denormalizationContext: ['groups' => ['utilisateurs.register']]
+)]
+
 class Utilisateur
 {
     #[ORM\Id, ORM\Column(name: 'id_utilisateur'), ORM\GeneratedValue]
+    #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
     private ?int $id_utilisateur = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
+    #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
     public string $nom = '';
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
+    #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
     public string $prenom = '';
 
-    #[ORM\Column(type: 'string', length: 100, unique: true)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     #[Assert\NotBlank]
     #[Assert\Email]
+    #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
     public string $email = '';
 
     #[ORM\Column(type: 'string', length: 14, nullable: true)]
+    #[Groups(['utilisateurs.index'])]
     public ?string $telephone = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
+    #[Groups(['utilisateurs.register'])]
     public string $mot_de_passe = '';
 
     /**

@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Controller\API\ProduitController;
 use App\Repository\ProduitRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -13,7 +16,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['produits.index']],
-    denormalizationContext: ['groups' => ['produits.detail']]
+    denormalizationContext: ['groups' => ['produits.detail']],
+    operations: [
+        new Post(
+            uriTemplate: '/produits',
+            controller: ProduitController::class,
+            name: 'api_product_create',
+        ),
+    ]
 )]
 class Produit
 {
@@ -63,6 +73,7 @@ class Produit
         $this->id_utilisateur = new ArrayCollection();
         $this->produitsVariants = new ArrayCollection();
         $this->commandeDetails = new ArrayCollection();
+        $this->date_ajout = new \DateTime();
     }
 
     public function getId(): ?int
