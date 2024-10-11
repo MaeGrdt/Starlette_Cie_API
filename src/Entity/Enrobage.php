@@ -8,24 +8,35 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EnrobageRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['enrobages.index']],
+    denormalizationContext: ['groups' => ['enrobages.create']],
+)]
 class Enrobage
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_enrobage')]
+    #[Groups(['enrobages.index', 'enrobages.create'])]
     private ?int $id_enrobage = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    #[Groups(['enrobages.index', 'enrobages.create'])]
     private ?string $nom_enrobage = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Groups(['enrobages.index', 'enrobages.create'])]
     private ?string $description = null;
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
+    #[Groups(['enrobages.index'])]
     private ?Image $id_image = null;
 
     /**

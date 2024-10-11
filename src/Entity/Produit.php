@@ -3,50 +3,45 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Post;
-use App\Controller\API\ProduitController;
 use App\Repository\ProduitRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource(
-    normalizationContext: ['groups' => ['produits.index']],
-    denormalizationContext: ['groups' => ['produits.detail']],
-    operations: [
-        new Post(
-            uriTemplate: '/produits',
-            controller: ProduitController::class,
-            name: 'api_product_create',
-        ),
-    ]
+    normalizationContext: ['groups' => ['produits.index', 'produits.details']],
+    denormalizationContext: ['groups' => ['produits.create']],
 )]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_produit')]
-    #[Groups(['produits.index', 'produits.detail'])]
+    #[Groups(['produits.index', 'produits.create'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['produits.index', 'produits.detail'])]
+    #[Assert\NotBlank]
+    #[Groups(['produits.index', 'produits.create'])]
     private ?string $nom = null;
 
     #[ORM\Column(type: 'string', length: 50)]
-    #[Groups(['produits.detail'])]
+    #[Assert\NotBlank]
+    #[Groups(['produits.create'])]
     private ?string $categorie = null;
 
     #[ORM\Column(type: 'string', length: 50)]
-    #[Groups(['produits.detail'])]
+    #[Assert\NotBlank]
+    #[Groups(['produits.create'])]
     private ?string $type_produit = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['produits.detail'])]
+    #[Groups(['produits.index'])]
     private ?\DateTimeInterface $date_ajout = null;
 
     #[ORM\OneToMany(targetEntity: Favoris::class, mappedBy: 'id_produit')]
@@ -73,6 +68,11 @@ class Produit
         $this->id_utilisateur = new ArrayCollection();
         $this->produitsVariants = new ArrayCollection();
         $this->commandeDetails = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function setDateAjoutAutomatically(): void
+    {
         $this->date_ajout = new \DateTime();
     }
 
@@ -117,12 +117,6 @@ class Produit
     public function getDateAjout(): ?\DateTimeInterface
     {
         return $this->date_ajout;
-    }
-
-    public function setDateAjout(\DateTimeInterface $date_ajout): self
-    {
-        $this->date_ajout = $date_ajout;
-        return $this;
     }
 
     public function getFavoris(): Collection
