@@ -21,7 +21,7 @@ class ProduitsVariants
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer', name: 'id_variant')]
     #[Groups(['variants.index', 'variants.create'])]
-    private ?int $id_variant = null;
+    private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
@@ -69,14 +69,10 @@ class ProduitsVariants
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
     private ?Image $id_image = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'produits_enrobage')]
-    // #[ORM\JoinColumn(nullable: false, name: 'id_enrobage', referencedColumnName: 'id_enrobage')]
-    // #[Assert\NotNull]
-    // #[Groups(['variants.index', 'variants.create'])]
-    // private ?Enrobage $id_enrobage = null;
-
     #[ORM\ManyToOne(inversedBy: 'produits_enrobage')]
-    #[ORM\JoinColumn(nullable: true, name: 'id_enrobage', referencedColumnName: 'id_enrobage')]
+    #[ORM\JoinColumn(nullable: false, name: 'id_enrobage', referencedColumnName: 'id_enrobage')]
+    #[Assert\NotNull]
+    #[Groups(['variants.index', 'variants.create'])]
     private ?Enrobage $id_enrobage = null;
 
     #[ORM\PrePersist]
@@ -87,7 +83,7 @@ class ProduitsVariants
 
     public function getId(): ?int
     {
-        return $this->id_variant;
+        return $this->id;
     }
 
     public function getPrix(): ?int

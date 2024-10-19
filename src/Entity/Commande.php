@@ -14,7 +14,7 @@ class Commande
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_commande')]
-    private ?int $id_commande;
+    private ?int $id;
 
     #[ORM\Column(length: 10)]
     private ?string $numero_commande;
@@ -38,7 +38,7 @@ class Commande
 
     public function getId(): ?int
     {
-        return $this->id_commande;
+        return $this->id;
     }
 
     public function getNumeroCommande(): ?int

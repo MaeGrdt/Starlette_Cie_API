@@ -14,7 +14,7 @@ class Paiement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_paiement')]
-    private ?int $id_paiement = null;
+    private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_paiement = null;
@@ -34,7 +34,7 @@ class Paiement
 
     public function getId(): ?int
     {
-        return $this->id_paiement;
+        return $this->id;
     }
 
     public function getDatePaiement(): ?\DateTimeInterface

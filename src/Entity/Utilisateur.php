@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UtilisateurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,11 +18,14 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['utilisateurs.register']]
 )]
 
-class Utilisateur
+class Utilisateur implements PasswordAuthenticatedUserInterface
 {
-    #[ORM\Id, ORM\Column(name: 'id_utilisateur'), ORM\GeneratedValue]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: 'id_utilisateur')]
+    #[ApiProperty(identifier: true)]
     #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
-    private ?int $id_utilisateur = null;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
@@ -43,9 +48,13 @@ class Utilisateur
     public ?string $telephone = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(groups: ['utilisateurs.register'])]
     #[Groups(['utilisateurs.register'])]
     public string $mot_de_passe = '';
+
+    #[ORM\Column(type: 'string', length: 50, options: ['default' => 'client'])]
+    #[Groups(['utilisateurs.register'])]
+    public string $role = 'client';
 
     /**
      * @var Collection<int, Favoris>
@@ -78,7 +87,7 @@ class Utilisateur
 
     public function getIdUtilisateur(): ?int
     {
-        return $this->id_utilisateur;
+        return $this->id;
     }
 
     public function getNom(): string
@@ -125,14 +134,25 @@ class Utilisateur
         return $this;
     }
 
-    public function getMotDePasse(): string
+    public function getPassword(): ?string
     {
         return $this->mot_de_passe;
     }
 
-    public function setMotDePasse(string $mot_de_passe): self
+    public function setPassword(string $password): self
     {
-        $this->mot_de_passe = $mot_de_passe;
+        $this->mot_de_passe = $password;
+        return $this;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
         return $this;
     }
 

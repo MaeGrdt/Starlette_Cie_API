@@ -14,7 +14,7 @@ class ArticleActualite
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_article')]
-    private ?int $id_article = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $nom_article = null;
@@ -37,7 +37,7 @@ class ArticleActualite
 
     public function getId(): ?int
     {
-        return $this->id_article;
+        return $this->id;
     }
 
     public function getNomArticle(): ?string

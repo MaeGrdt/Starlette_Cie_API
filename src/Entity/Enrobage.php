@@ -22,7 +22,7 @@ class Enrobage
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_enrobage')]
     #[Groups(['enrobages.index', 'enrobages.create'])]
-    private ?int $id_enrobage = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
@@ -52,7 +52,7 @@ class Enrobage
 
     public function getId(): ?int
     {
-        return $this->id_enrobage;
+        return $this->id;
     }
 
     public function getNomEnrobage(): ?string

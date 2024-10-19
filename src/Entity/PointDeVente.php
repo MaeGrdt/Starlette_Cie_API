@@ -8,38 +8,51 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PointDeVenteRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    normalizationContext: ['groups' => ['pointDeVente.index']],
+    denormalizationContext: ['groups' => ['pointDeVente.create']],
+)]
 class PointDeVente
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_point_de_vente')]
-    private ?int $id_point_de_vente = null;
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
+    private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?string $descriptif = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?string $jour = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?\DateTimeInterface $horaire_debut = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?\DateTimeInterface $horaire_fin = null;
 
     #[ORM\Column(type: 'string', length: 50)]
+    #[Groups(['pointDeVente.index'], ['pointDeVente.create'])]
     private ?string $cadence = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['pointDeVente.index'])]
     private ?string $iframe_google_map = null;
 
     /**
@@ -55,7 +68,7 @@ class PointDeVente
 
     public function getId(): ?int
     {
-        return $this->id_point_de_vente;
+        return $this->id;
     }
 
     public function getNom(): ?string

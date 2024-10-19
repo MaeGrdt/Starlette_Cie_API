@@ -13,7 +13,7 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_image')]
-    private ?int $id_image = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $url = null;
@@ -23,7 +23,7 @@ class Image
 
     public function getId(): ?int
     {
-        return $this->id_image;
+        return $this->id;
     }
 
     public function getUrl(): ?string

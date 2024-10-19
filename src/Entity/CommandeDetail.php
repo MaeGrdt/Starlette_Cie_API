@@ -15,7 +15,7 @@ class CommandeDetail
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_commande_detail')]
-    private ?int $id_commande_detail = null;
+    private ?int $id = null;
 
     #[ORM\Column]
     private ?int $quantite = null;
@@ -45,7 +45,7 @@ class CommandeDetail
 
     public function getId(): ?int
     {
-        return $this->id_commande_detail;
+        return $this->id;
     }
 
     public function getQuantite(): ?int

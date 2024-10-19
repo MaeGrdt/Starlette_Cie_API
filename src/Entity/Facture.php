@@ -14,7 +14,7 @@ class Facture
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_facture')]
-    private ?int $id_facture = null;
+    private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $url_facture = null;
@@ -28,7 +28,7 @@ class Facture
 
     public function getId(): ?int
     {
-        return $this->id_facture;
+        return $this->id;
     }
 
     public function getUrlFacture(): ?string

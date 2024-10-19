@@ -14,7 +14,7 @@ class Favoris
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_favoris')]
-    private ?int $id_favoris = null;
+    private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date_ajout;
@@ -29,7 +29,7 @@ class Favoris
 
     public function getId(): ?int
     {
-        return $this->id_favoris;
+        return $this->id;
     }
 
     public function getDateAjout(): ?\DateTimeInterface
