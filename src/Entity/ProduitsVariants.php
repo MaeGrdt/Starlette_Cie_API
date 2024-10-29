@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProduitsVariantsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
-    normalizationContext: ['groups' => ['variants.index', 'variants.details']],
+    normalizationContext: ['groups' => ['variants.details', 'produits.details']],
     denormalizationContext: ['groups' => ['variants.create']],
 )]
 class ProduitsVariants
@@ -20,49 +20,49 @@ class ProduitsVariants
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer', name: 'id_variant')]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?int $prix = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?int $poids = null;
 
     #[ORM\Column(type: 'string', length: 20)]
     #[Assert\NotBlank]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?string $affinage = null;
 
     #[ORM\Column(type: 'string', length: 20)]
     #[Assert\NotBlank]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?string $stock = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?string $composition = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['variants.index'])]
+    #[Groups(['variants.details', 'produits.details'])]
     private ?\DateTimeInterface $date_ajout = null;
 
     #[ORM\ManyToOne(inversedBy: 'produits')]
     #[ORM\JoinColumn(nullable: false, name: 'id_produit', referencedColumnName: 'id_produit')]
     #[Assert\NotNull]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.create'])]
     private ?Produit $id_produit = null;
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
@@ -72,7 +72,7 @@ class ProduitsVariants
     #[ORM\ManyToOne(inversedBy: 'produits_enrobage')]
     #[ORM\JoinColumn(nullable: false, name: 'id_enrobage', referencedColumnName: 'id_enrobage')]
     #[Assert\NotNull]
-    #[Groups(['variants.index', 'variants.create'])]
+    #[Groups(['variants.details', 'produits.details', 'variants.create'])]
     private ?Enrobage $id_enrobage = null;
 
     #[ORM\PrePersist]

@@ -23,7 +23,6 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_utilisateur')]
-    #[ApiProperty(identifier: true)]
     #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
     private ?int $id = null;
 

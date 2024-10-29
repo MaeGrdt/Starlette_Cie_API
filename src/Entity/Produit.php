@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
-    normalizationContext: ['groups' => ['produits.index', 'produits.details']],
+    normalizationContext: ['groups' => ['produits.details']],
     denormalizationContext: ['groups' => ['produits.create']],
 )]
 class Produit
@@ -22,26 +22,26 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_produit')]
-    #[Groups(['produits.index', 'produits.create'])]
+    #[Groups(['produits.details', 'produits.create'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups(['produits.index', 'produits.create'])]
+    #[Groups(['produits.details', 'produits.create'])]
     private ?string $nom = null;
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank]
-    #[Groups(['produits.create'])]
+    #[Groups(['produits.create', 'produits.details'])]
     private ?string $categorie = null;
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank]
-    #[Groups(['produits.create'])]
+    #[Groups(['produits.create', 'produits.details'])]
     private ?string $type_produit = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['produits.index'])]
+    #[Groups(['produits.details'])]
     private ?\DateTimeInterface $date_ajout = null;
 
     #[ORM\OneToMany(targetEntity: Favoris::class, mappedBy: 'id_produit')]
@@ -52,11 +52,11 @@ class Produit
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
-    #[Groups(['produits.detail'])]
+    #[Groups(['produits.details'])]
     private ?Image $id_image = null;
 
     #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_produit')]
-    #[Groups(['produits.detail'])]
+    #[Groups(['produits.details'])]
     private Collection $produitsVariants;
 
     #[ORM\ManyToMany(targetEntity: CommandeDetail::class, mappedBy: 'produits')]

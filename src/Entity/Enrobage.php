@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EnrobageRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['enrobages.index']],
+    normalizationContext: ['groups' => ['enrobages.index', 'variants.details', 'produits.details']],
     denormalizationContext: ['groups' => ['enrobages.create']],
 )]
 class Enrobage
@@ -21,12 +21,12 @@ class Enrobage
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_enrobage')]
-    #[Groups(['enrobages.index', 'enrobages.create'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'variants.details', 'produits.details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups(['enrobages.index', 'enrobages.create'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'variants.details', 'produits.details'])]
     private ?string $nom_enrobage = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -36,7 +36,7 @@ class Enrobage
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
-    #[Groups(['enrobages.index'])]
+    #[Groups(['enrobages.index', 'variants.details', 'produits.details'])]
     private ?Image $id_image = null;
 
     /**
