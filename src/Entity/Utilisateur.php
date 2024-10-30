@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,13 +19,14 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['utilisateurs.register']]
 )]
 
-class Utilisateur implements PasswordAuthenticatedUserInterface
+class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_utilisateur')]
+    #[ApiProperty(identifier: true)]
     #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
-    private ?int $id = null;
+    private ?int $id_utilisateur = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank]
@@ -52,7 +54,7 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     public string $mot_de_passe = '';
 
     #[ORM\Column(type: 'string', length: 50, options: ['default' => 'client'])]
-    #[Groups(['utilisateurs.register'])]
+    #[Groups(['utilisateurs.index', 'utilisateurs.register'])]
     public string $role = 'client';
 
     /**
@@ -86,7 +88,7 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
 
     public function getIdUtilisateur(): ?int
     {
-        return $this->id;
+        return $this->id_utilisateur;
     }
 
     public function getNom(): string
@@ -153,6 +155,34 @@ class Utilisateur implements PasswordAuthenticatedUserInterface
     {
         $this->role = $role;
         return $this;
+    }
+
+    /**
+     * Retourne les rôles de l'utilisateur.
+     *
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        return [$this->role];
+    }
+
+    /**
+     * Identifiant unique de l'utilisateur (email dans ce cas).
+     *
+     * @return string
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * Méthode pour effacer les données sensibles, inutile ici mais obligatoire.
+     */
+    public function eraseCredentials(): void
+    {
+        // Cette méthode peut rester vide si aucune donnée sensible n'est en mémoire.
     }
 
     /**

@@ -25,3 +25,7 @@ services:
     App\EventListener\PasswordHashListener:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.view', method: 'onKernelView', priority: 32 }
+
+    App\Security\LoginSuccessHandler:
+        arguments:
+            $jwtManager: '@lexik_jwt_authentication.jwt_manager'
