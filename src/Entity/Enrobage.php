@@ -14,24 +14,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: EnrobageRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['enrobages.index', 'variants.details', 'produits.details']],
-    denormalizationContext: ['groups' => ['enrobages.create']],
+    denormalizationContext: ['groups' => ['enrobages.create', 'produits.create']],
 )]
 class Enrobage
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_enrobage')]
-    #[Groups(['enrobages.index', 'enrobages.create', 'variants.details', 'produits.details'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'variants.details','produits.details', 'produits.create'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups(['enrobages.index', 'enrobages.create', 'variants.details', 'produits.details'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'variants.details','produits.details', 'produits.create'])]
     private ?string $nom_enrobage = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Groups(['enrobages.index', 'enrobages.create'])]
+    #[Groups(['enrobages.index','enrobages.create', 'produits.create'])]
     private ?string $description = null;
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
@@ -42,7 +42,8 @@ class Enrobage
     /**
      * @var Collection<int, ProduitsVariants>
      */
-    #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_enrobage')]
+    #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_enrobage', cascade: ['persist', 'remove'])]
+    #[Groups(['enrobages.index', 'produits.details'])]
     private Collection $produits_enrobage;
 
     public function __construct()
@@ -103,7 +104,7 @@ class Enrobage
     {
         if (!$this->produits_enrobage->contains($produitsEnrobage)) {
             $this->produits_enrobage->add($produitsEnrobage);
-            $produitsEnrobage->setIdEnrobage($this);
+            $produitsEnrobage->setIdEnrobage($this); // Assurez-vous que cette méthode existe
         }
 
         return $this;
@@ -112,7 +113,7 @@ class Enrobage
     public function removeProduitsEnrobage(ProduitsVariants $produitsEnrobage): static
     {
         if ($this->produits_enrobage->removeElement($produitsEnrobage)) {
-            // set the owning side to null (unless already changed)
+            // Mettre l'autre côté à null (sauf s'il a déjà été modifié)
             if ($produitsEnrobage->getIdEnrobage() === $this) {
                 $produitsEnrobage->setIdEnrobage(null);
             }

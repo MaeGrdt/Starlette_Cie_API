@@ -29,3 +29,7 @@ services:
     App\Security\LoginSuccessHandler:
         arguments:
             $jwtManager: '@lexik_jwt_authentication.jwt_manager'
+
+    App\DataPersister\ProduitDataPersister:
+        arguments: ['@doctrine.orm.entity_manager']
+        tags: ['api_platform.data_persister']

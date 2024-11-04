@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Dto\ProduitInput;
 use App\Repository\ProduitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
+    input: ProduitInput::class,
     normalizationContext: ['groups' => ['produits.details']],
     denormalizationContext: ['groups' => ['produits.create']],
 )]
@@ -55,7 +57,7 @@ class Produit
     #[Groups(['produits.details'])]
     private ?Image $id_image = null;
 
-    #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_produit')]
+    #[ORM\OneToMany(targetEntity: ProduitsVariants::class, mappedBy: 'id_produit', cascade: ['persist'])]
     #[Groups(['produits.details'])]
     private Collection $produitsVariants;
 
@@ -193,7 +195,6 @@ class Produit
             $this->produitsVariants->add($produitsVariant);
             $produitsVariant->setIdProduit($this);
         }
-
         return $this;
     }
 
