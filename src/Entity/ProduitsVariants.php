@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -12,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ProduitsVariantsRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ApiResource(
-    normalizationContext: ['groups' => ['variants.details', 'produits.details']],
+    normalizationContext: ['groups' => ['variants.details', 'produits.details', 'produits.boutique']],
     denormalizationContext: ['groups' => ['variants.create', 'produits.create']],
 )]
 class ProduitsVariants
@@ -20,46 +19,35 @@ class ProduitsVariants
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer', name: 'id_variant')]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
     private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
     private ?int $prix = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create'])]
     private ?int $poids = null;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    #[Assert\NotBlank]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
     private ?string $affinage = null;
 
     #[ORM\Column(type: 'string', length: 20)]
     #[Assert\NotBlank]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
     private ?string $stock = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
-    private ?string $description = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
-    private ?string $composition = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['variants.details', 'produits.details'])]
+    #[Groups(['variants.details', 'produits.boutique'])]
     private ?\DateTimeInterface $date_ajout = null;
 
-    #[ORM\ManyToOne(inversedBy: 'produits')]
+    #[ORM\ManyToOne(inversedBy: 'produitsVariants')]
     #[ORM\JoinColumn(nullable: false, name: 'id_produit', referencedColumnName: 'id_produit')]
     #[Assert\NotNull]
     #[Groups(['variants.create', 'produits.create'])]
@@ -67,12 +55,12 @@ class ProduitsVariants
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
+    #[Groups(['variants.details', 'produits.boutique'])]
     private ?Image $id_image = null;
 
-    #[ORM\ManyToOne(inversedBy: 'produits_enrobage')]
-    #[ORM\JoinColumn(nullable: false, name: 'id_enrobage', referencedColumnName: 'id_enrobage')]
-    #[Assert\NotNull]
-    #[Groups(['variants.details', 'produits.details','variants.create', 'produits.create'])]
+    #[ORM\ManyToOne(targetEntity: Enrobage::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'id_enrobage', referencedColumnName: 'id_enrobage', nullable: true)]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
     private ?Enrobage $id_enrobage = null;
 
     #[ORM\PrePersist]
@@ -130,30 +118,6 @@ class ProduitsVariants
     public function setStock(?string $stock): static
     {
         $this->stock = $stock;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getComposition(): ?string
-    {
-        return $this->composition;
-    }
-
-    public function setComposition(string $composition): static
-    {
-        $this->composition = $composition;
 
         return $this;
     }

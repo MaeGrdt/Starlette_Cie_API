@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ApiResource(
-    normalizationContext: ['groups' => ['produits.details']],
+    normalizationContext: ['groups' => ['produits.boutique']],
     denormalizationContext: ['groups' => ['produits.create']],
 )]
 class Image
@@ -17,11 +17,11 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_image')]
-    #[Groups(['produits.create'])]
+    #[Groups(['produits.create', 'produits.boutique'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['produits.create'])]
+    #[Groups(['produits.create', 'produits.boutique'])]
     private ?string $url = null;
 
     #[ORM\Column(type: 'string', length: 50)]
