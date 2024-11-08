@@ -19,23 +19,23 @@ class ProduitsVariants
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer', name: 'id_variant')]
-    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique', 'produits.details'])]
     private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
-    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique', 'produits.details'])]
     private ?int $prix = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Type(type: 'integer')]
-    #[Groups(['variants.details', 'variants.create', 'produits.create'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.details'])]
     private ?int $poids = null;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique', 'produits.details'])]
     private ?string $affinage = null;
 
     #[ORM\Column(type: 'string', length: 20)]
@@ -55,12 +55,12 @@ class ProduitsVariants
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_image', referencedColumnName: 'id_image')]
-    #[Groups(['variants.details', 'produits.boutique'])]
+    #[Groups(['variants.details', 'produits.boutique', 'produits.details'])]
     private ?Image $id_image = null;
 
     #[ORM\ManyToOne(targetEntity: Enrobage::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'id_enrobage', referencedColumnName: 'id_enrobage', nullable: true)]
-    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique'])]
+    #[Groups(['variants.details', 'variants.create', 'produits.create', 'produits.boutique', 'produits.details'])]
     private ?Enrobage $id_enrobage = null;
 
     #[ORM\PrePersist]

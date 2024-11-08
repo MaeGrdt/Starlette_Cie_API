@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['produits.create']],
     operations: [
         new GetCollection(normalizationContext: ['groups' => ['produits.boutique']]),
-        new Get(),
+        new Get(normalizationContext: ['groups' => ['produits.details']]),
         new Post(
             uriTemplate: '/produits',
             controller: ProduitController::class . '::create',
@@ -48,12 +48,12 @@ class Produit
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank]
-    #[Groups(['produits.create', 'produits.details', 'produits.boutique'])]
+    #[Groups(['produits.create', 'produits.boutique'])]
     private ?string $categorie = null;
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank]
-    #[Groups(['produits.create', 'produits.details', 'produits.boutique'])]
+    #[Groups(['produits.create', 'produits.boutique'])]
     private ?string $type_produit = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

@@ -17,11 +17,11 @@ class Image
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_image')]
-    #[Groups(['produits.create', 'produits.boutique'])]
+    #[Groups(['produits.create', 'produits.boutique', 'produits.details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['produits.create', 'produits.boutique'])]
+    #[Groups(['produits.create', 'produits.boutique', 'produits.details'])]
     private ?string $url = null;
 
     #[ORM\Column(type: 'string', length: 50)]

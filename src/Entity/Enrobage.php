@@ -21,17 +21,17 @@ class Enrobage
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'id_enrobage')]
-    #[Groups(['enrobages.index', 'enrobages.create', 'produits.create', 'produits.boutique'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'produits.create', 'produits.boutique', 'produits.details'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
-    #[Groups(['enrobages.index', 'enrobages.create', 'produits.create', 'produits.boutique'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'produits.create', 'produits.boutique', 'produits.details'])]
     private ?string $nom_enrobage = null;
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
-    #[Groups(['enrobages.index', 'enrobages.create', 'produits.create'])]
+    #[Groups(['enrobages.index', 'enrobages.create', 'produits.create', 'produits.details'])]
     private ?string $description = null;
 
     #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
