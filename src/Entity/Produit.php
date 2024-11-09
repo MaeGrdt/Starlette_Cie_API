@@ -48,7 +48,7 @@ class Produit
 
     #[ORM\Column(type: 'string', length: 50)]
     #[Assert\NotBlank]
-    #[Groups(['produits.create', 'produits.boutique'])]
+    #[Groups(['produits.create', 'produits.boutique', 'produits.details'])]
     private ?string $categorie = null;
 
     #[ORM\Column(type: 'string', length: 50)]
