@@ -34,3 +34,10 @@ services:
   App\Security\LoginSuccessHandler:
     arguments:
       $jwtManager: "@lexik_jwt_authentication.jwt_manager"
+
+  App\Controller\PaymentController:
+    tags: ['controller.service_arguments']
+
+  App\Service\StripeService:
+    arguments:
+      $stripeSecretKey: '%env(STRIPE_SECRET_KEY)%'
